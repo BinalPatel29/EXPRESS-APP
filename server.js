@@ -1,8 +1,26 @@
 import express from 'express';
 import 'dotenv/config';
+import notesRouter from './routes/notes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+app.use((req,res,next) => {
+    const now = new Date().toLocaleTimeString();
+    console.log(`[${now}] ${req.method} ${req.url}`);
+    next();
+});
+
+app.use((req,res,next) => {
+    req.startTime = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - req.startTime;
+        console.log(`Request took ${duration}ms`);
+    });
+    next();
+});
 
 app.get('/', (req,res) => {
     res.send("Hello from Express!");
