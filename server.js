@@ -15,6 +15,25 @@ const server = http.createServer((req,res) => {
 
 app.use(express.json());
 
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).send({ status: 404, message: err.message });
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  if (req.method === 'POST') {
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).send('Bad Request');
+    }
+    if (Object.keys(req.body).length === 0 || !req.body.text) {
+      return res.status(400).json({ error: 'text is required' });
+    }
+  }
+  next(); 
+});
+
 app.use((req,res,next) => {
     const now = new Date().toLocaleTimeString();
     console.log(`[${now}] ${req.method} ${req.url}`);
