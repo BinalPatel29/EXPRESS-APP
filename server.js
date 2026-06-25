@@ -1,9 +1,17 @@
 import express from 'express';
 import 'dotenv/config';
 import notesRouter from './routes/notes.js';
+import http from 'http';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+/*
+const server = http.createServer((req,res) => {
+    res.writeHead(200, { "content-type" : 'apllication/json' });
+    res.end(JSON.stringify(data));
+    express: res.json(data);
+})
+*/
 
 app.use(express.json());
 
@@ -35,7 +43,7 @@ app.get('/about', (req,res) => {
 app.get('/api/status', (req,res) => {
     res.json({ status : 'ok', message: "Server is running" });
 });
-
+/*
 app.get('/users/:id', (req,res) => {
     const userId = req.params.id;
     res.json({ message : `You requsted user ${userId}` });
@@ -51,8 +59,8 @@ app.get('/search', (req, res) => {
    const limit = req.query.limit || 10;
    res.json({ searching: keyword, limit: limit });
 });
-
-app.use((req,res) => {
+*/
+app.use((req,res,next) => {
     res.status(404).json({ error: 'Route not found' });
 })
 
