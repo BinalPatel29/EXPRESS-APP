@@ -22,6 +22,8 @@ app.use((req,res,next) => {
     next();
 });
 
+app.use('/api/notes', notesRouter);
+
 app.get('/', (req,res) => {
     res.send("Hello from Express!");
 });
